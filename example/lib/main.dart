@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:math';
+
+import 'package:example/pub_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(MyApp());
@@ -32,6 +37,23 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   GlobalKey<FlutterMentionsState> key = GlobalKey<FlutterMentionsState>();
 
+  Future<List<Map<String, dynamic>>> sampleRequest(query) async {
+    var url = Uri.parse('https://api.publicapis.org/entries?title=$query');
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      List<Map<String, dynamic>> apis = [];
+      for (int i = 0; i < min(data['entries']?.length??0, 10); i++) {
+        apis.add(Map<String, dynamic>.from(data['entries'][i]));
+      }
+      print(apis);
+      return apis;
+    } else {
+      print('Request failed with status: ${response.statusCode}.');
+      return [];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          RaisedButton(
+          ElevatedButton(
             child: Text('Get Text'),
             onPressed: () {
               print(key.currentState!.controller!.markupText);
@@ -53,65 +75,30 @@ class _MyHomePageState extends State<MyHomePage> {
               suggestionPosition: SuggestionPosition.Top,
               maxLines: 5,
               minLines: 1,
+              forceListHeight: true,
               decoration: InputDecoration(hintText: 'hello'),
+              onAsyncSearchChanged: (trigger, value) {
+                if (trigger == '@' && value.length > 0) {
+                  return sampleRequest(value);
+                }
+                return Future.value([]);
+              },
+              suggestionListHeight: MediaQuery.of(context).size.height,
               mentions: [
                 Mention(
                     trigger: '@',
                     style: TextStyle(
                       color: Colors.amber,
                     ),
-                    data: [
-                      {
-                        'id': '61as61fsa',
-                        'display': 'fayeedP',
-                        'full_name': 'Fayeed Pawaskar',
-                        'photo':
-                            'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
-                      },
-                      {
-                        'id': '61asasgasgsag6a',
-                        'display': 'khaled',
-                        'full_name': 'DJ Khaled',
-                        'style': TextStyle(color: Colors.purple),
-                        'photo':
-                            'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
-                      },
-                      {
-                        'id': 'asfgasga41',
-                        'display': 'markT',
-                        'full_name': 'Mark Twain',
-                        'photo':
-                            'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
-                      },
-                      {
-                        'id': 'asfsaf451a',
-                        'display': 'JhonL',
-                        'full_name': 'Jhon Legend',
-                        'photo':
-                            'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
-                      },
-                    ],
-                    matchAll: false,
+                   useAsync: true,
+                   matchAll: false,
+                   displayTarget: 'API',
+                   displayId: "API",
                     suggestionBuilder: (data) {
-                      return Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: Row(
-                          children: <Widget>[
-                            CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                data['photo'],
-                              ),
-                            ),
-                            SizedBox(
-                              width: 20.0,
-                            ),
-                            Column(
-                              children: <Widget>[
-                                Text(data['full_name']),
-                                Text('@${data['display']}'),
-                              ],
-                            )
-                          ],
+                      return ListTile(
+                        title: Text(data['API']),
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(data['Description']),
                         ),
                       );
                     }),

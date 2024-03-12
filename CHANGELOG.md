@@ -1,3 +1,7 @@
+## [2.0.2] - 12 March 2024
+
+- Added onAsyncSearchChanged for searching using custom search queries 
+
 ## [2.0.1] - 24 May 2021
 
 - Added support for Flutter 2.2.0
@@ -78,3 +82,4 @@
 ## [0.1.0] - 8 Aug 2020
 
 - Initial package released.
+

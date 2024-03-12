@@ -17,14 +17,25 @@ class LengthMap {
 class Mention {
   Mention({
     required this.trigger,
-    this.data = const [],
+    this.data,
     this.style,
     this.matchAll = false,
     this.suggestionBuilder,
     this.disableMarkup = false,
     this.markupBuilder,
+    this.useAsync = false,
+    this.onSelected,
+    
+    this.displayTarget = 'display',
+    this.displayStyle = 'style',  
+    this.displayId = 'id',
   });
+  final Function(Map<String, dynamic>)? onSelected;
+  final bool useAsync;
 
+  final String displayTarget;
+  final String displayStyle;
+  final String displayId;
   /// A single character that will be used to trigger the suggestions.
   final String trigger;
 
@@ -33,7 +44,7 @@ class Mention {
   /// You need to provide two properties `id` & `display` both are [String]
   /// You can also have any custom properties as you like to build custom suggestion
   /// widget.
-  final List<Map<String, dynamic>> data;
+  List<Map<String, dynamic>>? data;
 
   /// Style for the mention item in Input.
   final TextStyle? style;
@@ -50,6 +61,14 @@ class Mention {
   /// Allows to set custom markup for the mentioned item.
   final String Function(String trigger, String mention, String value)?
       markupBuilder;
+
+  void addAllToData(List<Map<String, dynamic>> data) {
+    this.data = data;
+  }
+
+  String toString() {
+    return 'Mention(trigger: $trigger, style: $style, matchAll: $matchAll, disableMarkup: $disableMarkup, useAsync: $useAsync, data: $data, suggestionBuilder: $suggestionBuilder, markupBuilder: $markupBuilder)';
+  }
 }
 
 class Annotation {
