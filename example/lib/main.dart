@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:example/pub_api.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mentions/flutter_mentions.dart';
+import 'package:ruki_flutter_mentions/ruki_flutter_mentions.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -42,8 +41,8 @@ class _MyHomePageState extends State<MyHomePage> {
     var response = await http.get(url);
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      List<Map<String, dynamic>> apis = [];
-      for (int i = 0; i < min(data['entries']?.length??0, 10); i++) {
+      var apis = <Map<String, dynamic>>[];
+      for (var i = 0; i < min(data['entries']?.length??0, 10); i++) {
         apis.add(Map<String, dynamic>.from(data['entries'][i]));
       }
       print(apis);
@@ -54,6 +53,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  String text = "@ruki#reactjs@API#javascript#API#API-pop";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,6 +64,10 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
+          AnnotatedText(text: text, annotationStyles: {
+            '@': TextStyle(color: Colors.amber),
+            '#': TextStyle(color: Colors.blue),
+          }),
           ElevatedButton(
             child: Text('Get Text'),
             onPressed: () {

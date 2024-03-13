@@ -1,4 +1,4 @@
-part of flutter_mentions;
+part of ruki_flutter_mentions;
 
 class OptionListController{
   Function(List<Map<String, dynamic>>) updateData = (List<Map<String, dynamic>> data) => {};

@@ -1,4 +1,4 @@
-part of flutter_mentions;
+part of ruki_flutter_mentions;
 
 enum SuggestionPosition { Top, Bottom }
 
@@ -66,6 +66,7 @@ class Mention {
     this.data = data;
   }
 
+  @override
   String toString() {
     return 'Mention(trigger: $trigger, style: $style, matchAll: $matchAll, disableMarkup: $disableMarkup, useAsync: $useAsync, data: $data, suggestionBuilder: $suggestionBuilder, markupBuilder: $markupBuilder)';
   }

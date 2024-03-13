@@ -1,4 +1,4 @@
-part of flutter_mentions;
+part of ruki_flutter_mentions;
 
 class FlutterMentions extends StatefulWidget {
   FlutterMentions({
@@ -224,7 +224,6 @@ class FlutterMentions extends StatefulWidget {
   /// {@macro flutter.rendering.editable.selectionEnabled}
   bool get selectionEnabled => enableInteractiveSelection;
 
-  /// {@template flutter.material.textfield.onTap}
   /// Called for each distinct tap except for every second tap of a double tap.
   final GestureTapCallback? onTap;
 
@@ -441,7 +440,7 @@ class FlutterMentionsState extends State<FlutterMentions> {
   void triggerAsyncSearch(){
     if(widget.onAsyncSearchChanged != null && _selectedMention?.str != null) { 
        final str = _selectedMention!.str.toLowerCase();
-      Mention _mention = widget.mentions.firstWhere(
+      var _mention = widget.mentions.firstWhere(
             (element) => str.contains(element.trigger));
             if(_mention.useAsync) {
               widget.onAsyncSearchChanged!(_mention.trigger, _selectedMention!.str.substring(1)).then((value) {
@@ -471,32 +470,8 @@ class FlutterMentionsState extends State<FlutterMentions> {
     }
     OptionListController? optionListController = OptionListController();
 
-  Widget _buildMentionsSearch(String str) {
-    Mention _mention = widget.mentions.firstWhere(
-            (element) => str.contains(element.trigger));
-    if(_selectedMention!.str.substring(1).isEmpty) {
-      _mention.addAllToData([]); 
-      return _buildMentions(_mention);
-    }
-    return FutureBuilder<List<Map<String, dynamic>>>(
-      future: widget.onAsyncSearchChanged!(_mention.trigger, _selectedMention!.str.substring(1)) ,
-      builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-           
-          return _buildMentions(_mention);
-        }
-        if (snapshot.hasData) {
-          _mention.addAllToData(snapshot.data!);
-          return _buildMentions(_mention);
-        }
-        _mention.addAllToData([]);
-        return _buildMentions(_mention);
-      },
-    );
 
-  }
   Container _buildMentions(Mention list) {
-    //print("Building mentions...${(list.useAsync && widget.onAsyncSearchChanged != null)} | ${list} ");
     return Container(
     child: PortalEntry(
       portalAnchor: widget.suggestionPosition == SuggestionPosition.Bottom
@@ -581,3 +556,4 @@ class FlutterMentionsState extends State<FlutterMentions> {
   );
   }
 }
+

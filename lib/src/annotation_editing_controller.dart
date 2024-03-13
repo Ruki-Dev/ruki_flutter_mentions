@@ -1,4 +1,4 @@
-part of flutter_mentions;
+part of ruki_flutter_mentions;
 
 /// A custom implementation of [TextEditingController] to support @ mention or other
 /// trigger based mentions.
@@ -92,3 +92,4 @@ class AnnotationEditingController extends TextEditingController {
     return TextSpan(style: style, children: children);
   }
 }
+
